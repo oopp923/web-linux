@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Web Linux - 网页版 Linux 模拟器</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="lib/xterm.min.css">
+    <script src="lib/xterm.min.js"></script>
+    <script src="v86/v86.js" onerror="loadV86FromCDN()"></script>
+    <script>
+    if (location.protocol === 'file:') {
+        document.write('<style>.file-warning{display:block!important}</style>');
+    }
+    function loadV86FromCDN() {
+        var s = document.createElement('script');
+        s.src = 'https://copy.sh/v86/build/v86_all.js';
+        s.onload = function () {
+            if (window.initApp) window.initApp();
+        };
+        s.onerror = function () {
+            var t = document.getElementById('terminal');
+            if (t) t.textContent = '[错误] 无法加载 v86 库。\n请运行 setup.ps1 下载所需文件。';
+        };
+        document.head.appendChild(s);
+    }
+    </script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">
+                <span class="logo-text">Web Linux</span>
+                <span class="version">v1.0</span>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-indicator idle" id="status-indicator"></span>
+                    <span id="status-text">就绪</span>
+                </div>
+                <div class="status-item">
+                    运行时间: <span id="status-uptime">0s</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal Area -->
+        <div class="terminal-wrapper">
+            <div id="screen-container" style="display:none;"></div>
+            <div id="terminal" tabindex="0" role="textbox" aria-multiline="true">
+                <div class="file-warning" style="display:none;color:#ff6;padding:10px;font-size:13px;">
+[!] 检测到 file:// 协议，请运行 start.bat 或 python server.py 启动 HTTP 服务器。
+                </div>
+            </div>
+            <div id="loading-overlay" class="loading-overlay hidden">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" id="loading-text">正在加载 Linux 系统...</div>
+            </div>
+        </div>
+
+        <!-- Control Bar -->
+        <div class="control-bar">
+            <div class="control-group">
+                <button class="control-btn primary" id="btn-start">启动系统</button>
+                <button class="control-btn" id="btn-restart" disabled>重启</button>
+                <button class="control-btn danger" id="btn-stop" disabled>关机</button>
+            </div>
+            <div class="control-group">
+                <button class="control-btn" id="btn-fullscreen">全屏</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/emulator-manager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

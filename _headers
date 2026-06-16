@@ -1,0 +1,14 @@
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Access-Control-Allow-Origin: *
+  Cache-Control: no-cache
+
+/*.wasm
+  Content-Type: application/wasm
+
+/*.bin
+  Content-Type: application/octet-stream
+
+/*.iso
+  Content-Type: application/octet-stream

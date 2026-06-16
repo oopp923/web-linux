@@ -1,0 +1,327 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0a0a0a;
+    color: #c0c0c0;
+    font-family: 'Consolas', 'Courier New', 'Source Code Pro', monospace;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 8px;
+}
+
+/* Header / Title Bar */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #1a1a2e;
+    border: 1px solid #2a2a4a;
+    border-radius: 6px 6px 0 0;
+    user-select: none;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #00ff88;
+}
+
+.header-title .logo-text {
+    letter-spacing: 1px;
+}
+
+.header-title .version {
+    font-size: 11px;
+    color: #666;
+    font-weight: normal;
+}
+
+/* Terminal Area */
+.terminal-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #0d0d0d;
+    border-left: 1px solid #1a1a2e;
+    border-right: 1px solid #1a1a2e;
+    position: relative;
+    min-height: 0;
+}
+
+#terminal {
+    flex: 1;
+    width: 100%;
+    padding: 4px;
+    overflow: hidden;
+}
+
+#terminal .xterm {
+    height: 100%;
+    padding: 4px;
+}
+
+#terminal .xterm-viewport {
+    scrollbar-width: thin;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar {
+    width: 6px;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-thumb {
+    background: #2a2a4a;
+    border-radius: 3px;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-thumb:hover {
+    background: #3a3a5a;
+}
+
+/* Canvas-based terminal */
+#screen-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    position: relative;
+    min-height: 0;
+}
+
+#screen-container canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    image-rendering: pixelated;
+}
+
+/* Control Bar */
+.control-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #1a1a2e;
+    border: 1px solid #2a2a4a;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.control-btn {
+    background: #2a2a4a;
+    color: #c0c0c0;
+    border: 1px solid #3a3a5a;
+    padding: 6px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.control-btn:hover {
+    background: #3a3a5a;
+    border-color: #4a4a7a;
+    color: #fff;
+}
+
+.control-btn:active {
+    background: #4a4a7a;
+    transform: scale(0.97);
+}
+
+.control-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.control-btn.primary {
+    background: #005533;
+    border-color: #007744;
+    color: #00ff88;
+}
+
+.control-btn.primary:hover {
+    background: #007744;
+    border-color: #00aa55;
+}
+
+.control-btn.danger {
+    background: #550022;
+    border-color: #770033;
+    color: #ff4466;
+}
+
+.control-btn.danger:hover {
+    background: #770033;
+    border-color: #aa0044;
+}
+
+/* Status Bar */
+.status-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 11px;
+    color: #888;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-indicator.idle {
+    background: #666;
+}
+
+.status-indicator.loading {
+    background: #ffaa00;
+    animation: pulse 0.8s infinite;
+}
+
+.status-indicator.running {
+    background: #00ff88;
+}
+
+.status-indicator.stopped {
+    background: #ff4466;
+}
+
+.status-indicator.error {
+    background: #ff0000;
+    animation: pulse 0.4s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Boot Messages */
+.boot-msg {
+    color: #888;
+    font-size: 12px;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    gap: 16px;
+}
+
+.loading-overlay.hidden {
+    display: none;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #2a2a4a;
+    border-top-color: #00ff88;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #aaa;
+    font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    #app {
+        padding: 4px;
+    }
+
+    .header-title {
+        font-size: 12px;
+    }
+
+    #terminal {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+
+    .control-btn {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+
+    .control-bar {
+        padding: 6px 10px;
+    }
+}
+
+/* Scrollbar Styling */
+#terminal::-webkit-scrollbar {
+    width: 6px;
+}
+
+#terminal::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+#terminal::-webkit-scrollbar-thumb {
+    background: #2a2a4a;
+    border-radius: 3px;
+}
+
+#terminal::-webkit-scrollbar-thumb:hover {
+    background: #3a3a5a;
+}
+
+/* Selection colors */
+::selection {
+    background: #335;
+    color: #fff;
+}
