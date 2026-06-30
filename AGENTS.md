@@ -14,6 +14,8 @@ bios/vgabios.bin    ← VGA BIOS firmware (35 KB)
 v86/v86.js          ← v86 all-in-one emulator library (250 KB, minified)
 v86/v86.wasm        ← WebAssembly accelerator (1.4 MB)
 images/linux.iso    ← Buildroot Linux CD-ROM (8.2 MB)
+images/alpine-virt.iso  ← Alpine Linux Virt ISO (50 MB)
+images/alpine-virt.iso  ← Alpine Linux Virt ISO (50 MB)
 ```
 
 - Pure HTML/CSS/JS, no framework, no build step, no npm.
@@ -68,17 +70,11 @@ Serial input sending uses `emulator.v.send('serial0-input', charCode)` — NOT `
 
 ## Auto-setup on boot
 
-10 seconds after emulator loads, `app.js` types these commands via the serial console:
+10 seconds after emulator loads, `app.js` types PS1/alias commands via the serial console.
 
 ```
 export PS1='\w# '
 alias tree='find . 2>/dev/null | sort | sed "s;[^/]*/;  ;g"'
-echo '#include <stdio.h>' >> hello.c
-echo '' >> hello.c
-echo 'int main() {' >> hello.c
-echo '    printf("Hello, Web Linux!\\n");' >> hello.c
-echo '    return 0;' >> hello.c
-echo '}' >> hello.c
 ```
 
 ## Antivirus false positive (火绒/360)
@@ -94,7 +90,18 @@ The `server.py` and `server.ps1` files are safe — they are plain HTTP servers 
 
 ## Shell / Emulator constraints
 
-- The Linux image (linux3.iso) is a minimal Buildroot/BusyBox system. Likely no gcc, no tree command.
-- `tree` is provided via shell alias (find + sort + sed).
-- `\w` in PS1 is supported by BusyBox ash.
+### Buildroot (images/linux.iso)
+- Minimal Buildroot system (8.2 MB, from `https://i.copy.sh/linux3.iso`).
+- Serial console via kernel cmdline `console=ttyS0` — serial output from boot.
+- Shell: BusyBox ash. No package manager, no gcc.
+
+### Alpine Linux (images/alpine-virt.iso)
+- Alpine Linux Virt 3.22.5 x86 (50 MB).
+- Serial console: ISOLINUX `SERIAL 0 115200`, kernel output to VGA only, login prompt on serial.
+- Login `root` (no password). `apk add gcc` for gcc. Network via v86 fetch proxy + virtio.
+- Configure online repo before installing: `setup-apkrepos` or manually edit `/etc/apk/repositories`.
+
+### Damn Small Linux (images/dsl.iso)
+- DSL 4.11 RC2 (50 MB), boots to X11 GUI. Built-in gcc. Needs VGA mode + mouse lock.
+
 - Mounting 9p filesystem (`mount host9p /mnt`) fails because no 9p server runs on host.

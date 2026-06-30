@@ -1,36 +1,21 @@
-const CONFIG = {
-    v86: {
-        memory_size: 128 * 1024 * 1024,
-        bios: {
-            url: 'bios/seabios.bin'
-        },
-        vga_bios: {
-            url: 'bios/vgabios.bin'
-        },
-        wasm_path: 'v86/v86.wasm',
-        boot_order: 0x132,
-        serial_container: null,
-        screen_container: null,
-        autostart: false,
-        disable_uart: false,
+var IMAGES = {
+    buildroot: {
+        url: 'https://i.copy.sh/linux3.iso',
+        memory: 128 * 1024 * 1024,
+        label: 'Buildroot',
+        desc: '轻量系统（8MB），无包管理器',
     },
-
-    display: {
-        font_size: 14,
-        font_family: 'Consolas, "Courier New", monospace',
-        background_color: '#0a0a0a',
-        foreground_color: '#f0f0f0',
-        cursor_color: '#00ff88',
-        max_lines: 5000,
+    alpine: {
+        url: 'https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/x86/alpine-virt-3.22.5-x86.iso',
+        memory: 256 * 1024 * 1024,
+        label: 'Alpine Linux',
+        desc: '完整系统（50MB），virtio 网卡，apk 装 gcc',
+        network: 'fetch',
+        netcard: 'virtio',
     },
+};
 
-    cdn: {
-        v86: 'https://copy.sh/v86/build/v86_all.js',
-        wasm: 'https://copy.sh/v86/build/v86.wasm',
-        seabios: 'https://copy.sh/v86/bios/seabios.bin',
-        vgabios: 'https://copy.sh/v86/bios/vgabios.bin',
-    },
-
+var CONFIG = {
     hasSharedArrayBuffer: (function () {
         try {
             return typeof SharedArrayBuffer !== 'undefined'
@@ -38,17 +23,5 @@ const CONFIG = {
         } catch (e) {
             return false;
         }
-    }()),
-
-    images: {
-        'linux': {
-            name: 'Linux (Buildroot)',
-            url: 'images/linux.iso',
-            type: 'cdrom',
-            description: '轻量级 Buildroot Linux',
-            memory: 64 * 1024 * 1024,
-        }
-    },
-
-    default_image: 'linux',
+    }())
 };

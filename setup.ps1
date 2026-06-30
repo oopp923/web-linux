@@ -17,6 +17,8 @@ $Deps = @(
     @{Url = "$BaseUrl/bios/vgabios.bin"; Path = "bios/vgabios.bin";  Desc = "VGA BIOS" }
     @{Url = "$BaseUrlCDN/lib/xterm.min.js";  Path = "lib/xterm.min.js";  Desc = "xterm.js" }
     @{Url = "$BaseUrlCDN/css/xterm.min.css"; Path = "lib/xterm.min.css"; Desc = "xterm CSS" }
+    @{Url = "https://raw.githubusercontent.com/eliot-akira/tcc-wasm/main/tcc.js";   Path = "lib/tcc.js";   Desc = "TCC WASM (JS)" }
+    @{Url = "https://raw.githubusercontent.com/eliot-akira/tcc-wasm/main/tcc.wasm"; Path = "lib/tcc.wasm"; Desc = "TCC WASM (binary)" }
 )
 
 $Images = @(

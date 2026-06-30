@@ -3,34 +3,16 @@ title Web Linux
 echo.
 echo  Web Linux Emulator
 echo  ========================================
-
-where python >nul 2>nul
-if %errorlevel%==0 (
-    echo  Starting with Python...
-    start /b python server.py >nul 2>&1
-    goto wait_ready
+echo  Starting server...
+start /b python server.py >nul 2>&1
+if %errorlevel% neq 0 (
+    echo  Error: Python not found. Install Python or use:
+    echo    python server.py
+    pause
+    exit /b
 )
-
-where powershell >nul 2>nul
-if %errorlevel%==0 (
-    echo  Starting with PowerShell...
-    start /b powershell -NoProfile -File "%~dp0server.ps1" >nul 2>&1
-    goto wait_ready
-)
-
-echo  Error: Python or PowerShell not found.
-pause
-exit /b
-
-:wait_ready
-echo  Waiting for server...
-powershell -NoProfile -Command "try{$c=New-Object Net.Sockets.TcpClient 'localhost',8080;$c.Close();exit 0}catch{exit 1}" >nul 2>&1
-if %errorlevel%==0 goto open
-timeout /t 1 /nobreak >nul
-goto wait_ready
-
-:open
-echo  Opening browser...
+timeout /t 2 /nobreak >nul
 start http://localhost:8080/
-echo  Server running. Close this window to stop.
+echo  Server: http://localhost:8080/
+echo  Close this window to stop.
 pause

@@ -3,61 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Web Linux - 网页版 Linux 模拟器</title>
+    <title>Web Linux 实验室</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="lib/xterm.min.css">
     <script src="lib/xterm.min.js"></script>
     <script src="v86/v86.js" onerror="loadV86FromCDN()"></script>
     <script>
-    if (location.protocol === 'file:') {
-        document.write('<style>.file-warning{display:block!important}</style>');
-    }
     function loadV86FromCDN() {
         var s = document.createElement('script');
         s.src = 'https://copy.sh/v86/build/v86_all.js';
-        s.onload = function () {
-            if (window.initApp) window.initApp();
-        };
+        s.onload = function () { if (window.initApp) window.initApp(); };
         s.onerror = function () {
             var t = document.getElementById('terminal');
             if (t) t.textContent = '[错误] 无法加载 v86 库。\n请运行 setup.ps1 下载所需文件。';
         };
         document.head.appendChild(s);
     }
+    if (location.protocol === 'file:') {
+        document.write('<style>.file-warning{display:block!important}</style>');
+    }
     </script>
 </head>
 <body>
     <div id="app">
-        <!-- Header -->
         <div class="header">
             <div class="header-title">
                 <span class="logo-text">Web Linux</span>
-                <span class="version">v1.0</span>
+                <span class="version">实验室</span>
             </div>
             <div class="status-bar">
-                <div class="status-item">
-                    <span class="status-indicator idle" id="status-indicator"></span>
-                    <span id="status-text">就绪</span>
-                </div>
-                <div class="status-item">
-                    运行时间: <span id="status-uptime">0s</span>
-                </div>
+                <span class="status-indicator idle" id="status-indicator"></span>
+                <span id="status-text">就绪</span>
+                <span class="sep">|</span>
+                <span>运行: <span id="status-uptime">0s</span></span>
             </div>
         </div>
 
-        <!-- Terminal Area -->
-        <div class="terminal-wrapper">
-            <div id="screen-container" style="display:none;"></div>
-            <div id="terminal" tabindex="0" role="textbox" aria-multiline="true">
-                <div class="file-warning" style="display:none;color:#ff6;padding:10px;font-size:13px;">
-[!] 检测到 file:// 协议，请运行 start.bat 或 python server.py 启动 HTTP 服务器。
+        <div class="main-area">
+            <!-- File Manager Panel (left side) -->
+            <div id="file-tree">
+                <div class="fm-toolbar">
+                    <button class="fm-btn" id="fm-back" title="后退" disabled>◀</button>
+                    <button class="fm-btn" id="fm-up" title="上一级">▲</button>
+                    <button class="fm-btn" id="fm-refresh" title="刷新">↻</button>
+                    <span class="fm-sep"></span>
+                    <button class="fm-btn" id="fm-newdir" title="新建文件夹">📁+</button>
+                    <button class="fm-btn" id="fm-upload" title="上传">📤</button>
+                </div>
+                <div class="fm-addrbar" id="fm-addrbar">
+                    <span class="fm-addr-icon">📁</span>
+                    <span class="fm-path" id="fm-path">/</span>
+                </div>
+                <div class="fm-list" id="fm-list">
+                    <div class="fm-status">启动系统后自动加载</div>
+                </div>
+                <div class="fm-footer" id="fm-footer">
+                    <span id="fm-status-text">就绪</span>
                 </div>
             </div>
-            <div id="loading-overlay" class="loading-overlay hidden">
-                <div class="loading-spinner"></div>
-                <div class="loading-text" id="loading-text">正在加载 Linux 系统...</div>
+
+            <!-- Terminal + Canvas -->
+            <div class="display-area">
+                <div class="terminal-wrapper">
+                    <div id="screen-container" style="display:none;"></div>
+                    <div id="terminal" tabindex="0">
+                        <div class="file-warning" style="display:none">
+                            [!] 不支持 file:// 协议，请运行 start.bat 启动 HTTP 服务器。
+                        </div>
+                    </div>
+                    <div id="loading-overlay" class="loading-overlay hidden">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text" id="loading-text">正在加载 Linux 系统...</div>
+                    </div>
+                </div>
+                <!-- C Playground -->
+                <div id="c-playground">
+                    <div class="c-toolbar">
+                        <span class="c-title">C 语言乐园</span>
+                        <div class="c-buttons">
+                            <button class="c-btn" id="c-compile-btn">编译检查</button>
+                            <button class="c-btn c-btn-primary" id="c-run-btn">编译运行</button>
+                            <button class="c-btn" id="c-terminal-btn">发送到终端</button>
+                            <span class="c-sep">|</span>
+                            <button class="c-btn c-btn-close" id="c-close-btn">关闭</button>
+                        </div>
+                    </div>
+                    <div class="c-body">
+                        <textarea id="c-code" class="c-code" spellcheck="false" placeholder="/* 在此编写 C 代码 */"></textarea>
+                        <div class="c-output-wrap">
+                            <div class="c-output-label">输出结果</div>
+                            <pre id="c-output" class="c-output"></pre>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Command Panel -->
+            <div class="command-panel" id="command-panel">
+                <div class="panel-header">命令面板</div>
+                <div class="panel-body"></div>
+                <div class="panel-footer">
+                    <div class="upload-zone" id="upload-zone">
+                        <span>点击或拖拽上传文件</span>
+                        <input type="file" id="file-input" style="display:none">
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
         <!-- Control Bar -->
@@ -66,15 +119,26 @@
                 <button class="control-btn primary" id="btn-start">启动系统</button>
                 <button class="control-btn" id="btn-restart" disabled>重启</button>
                 <button class="control-btn danger" id="btn-stop" disabled>关机</button>
-            </div>
-            <div class="control-group">
-                <button class="control-btn" id="btn-fullscreen">全屏</button>
+                <span class="ctrl-sep"></span>
+                <select class="image-select" id="image-select"></select>
+                <button class="control-btn" id="btn-display">VGA 画面</button>
+                <button class="control-btn" id="btn-panel">命令面板</button>
+                <button class="control-btn" id="btn-mouselock">锁定鼠标</button>
+                <button class="control-btn" id="btn-export">导出日志</button>
+                <span class="ctrl-sep"></span>
+                <button class="control-btn" id="btn-save">保存状态</button>
+                <button class="control-btn" id="btn-load">恢复状态</button>
+                <button class="control-btn" id="btn-files">文件管理</button>
+                <span class="ctrl-sep"></span>
+                <button class="control-btn" id="btn-editor">C 语言乐园</button>
             </div>
         </div>
     </div>
 
     <script src="js/config.js"></script>
     <script src="js/emulator-manager.js"></script>
+    <script src="js/file-tree.js"></script>
+    <script src="js/c-editor.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

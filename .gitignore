@@ -1,2 +1,18 @@
-Web-Linux.zip
-dist/
+# Secrets
+*.token
+.env
+*.env
+
+# Deploy scripts
+deploy*.ps1
+deploy*.py
+git_push.py
+
+# Build artifacts
+*.zip
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
